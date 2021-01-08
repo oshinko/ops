@@ -64,7 +64,7 @@ server {
     location = /50x.html {
     }
 
-    try_files \$uri $NGINX_TRY_FILES;
+    try_files \$uri $NGINX_TRY_FILES =404;
 }
 EOF"
 fi
