@@ -39,5 +39,5 @@ elif type yum > /dev/null 2>&1; then
   curl -SL https://github.com/docker/compose/releases/download/v2.11.2/docker-compose-linux-x86_64 \
         -o /usr/local/bin/docker-compose
   chmod +x /usr/local/bin/docker-compose
-  ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+  ln -fs /usr/local/bin/docker-compose /usr/bin/docker-compose
 fi
