@@ -36,7 +36,8 @@ elif type yum > /dev/null 2>&1; then
   systemctl start docker
 
   # ref: https://docs.docker.com/compose/install/linux/#install-the-plugin-manually
-  curl -SL https://github.com/docker/compose/releases/download/v2.11.2/docker-compose-linux-x86_64 \
+  arch=`uname -m`
+  curl -SL https://github.com/docker/compose/releases/download/v2.12.2/docker-compose-linux-$arch \
         -o /usr/local/bin/docker-compose
   chmod +x /usr/local/bin/docker-compose
   ln -fs /usr/local/bin/docker-compose /usr/bin/docker-compose
