@@ -2,6 +2,16 @@ set -e
 
 . /etc/os-release
 
+install_compose_plugin_manually() {
+  # https://docs.docker.com/compose/install/linux/#install-the-plugin-manually
+  ARCH=`uname -m`
+  DOCKER_CONFIG=${DOCKER_CONFIG:-/usr/local/lib/docker}
+  mkdir -p $DOCKER_CONFIG/cli-plugins
+  curl -SL https://github.com/docker/compose/releases/download/v2.20.3/docker-compose-linux-$ARCH \
+       -o $DOCKER_CONFIG/cli-plugins/docker-compose
+  chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+}
+
 # ref: https://docs.docker.com/compose/install/linux/
 if type apt > /dev/null 2>&1; then
   apt update
@@ -19,6 +29,12 @@ if type apt > /dev/null 2>&1; then
   apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
   service docker start
   apt-cache madison docker-ce
+
+elif type dnf > /dev/null 2>&1; then
+  dnf install docker -y
+  systemctl enable --now docker
+  install_compose_plugin_manually
+
 elif type yum > /dev/null 2>&1; then
   yum update -y
 
@@ -32,13 +48,7 @@ elif type yum > /dev/null 2>&1; then
     yum install -y docker-ce docker-ce-cli containerd.io
   fi
 
-  systemctl enable docker
-  systemctl start docker
+  systemctl enable --now docker
 
-  # ref: https://docs.docker.com/compose/install/linux/#install-the-plugin-manually
-  arch=`uname -m`
-  curl -SL https://github.com/docker/compose/releases/download/v2.12.2/docker-compose-linux-$arch \
-        -o /usr/local/bin/docker-compose
-  chmod +x /usr/local/bin/docker-compose
-  ln -fs /usr/local/bin/docker-compose /usr/bin/docker-compose
+  install_compose_plugin_manually
 fi
